@@ -1,0 +1,15 @@
+@inherits LayoutComponentBase
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudAppBar Elevation="2">
+    <MudText Typo="Typo.h6">MySimpleDictionary Demo</MudText>
+</MudAppBar>
+
+<MudContainer Class="py-6" MaxWidth="MaxWidth.False">
+    <MudPaper Class="mx-auto p-6" Elevation="1">
+        @Body
+    </MudPaper>
+</MudContainer>

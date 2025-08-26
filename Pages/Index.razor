@@ -1,0 +1,72 @@
+@page "/"
+@using System.Linq
+@inject MyDictionaryBlazor.Data.MySimpleDictionary<string, string> Dict
+
+<MudStack Spacing="2">
+    <MudText Typo="Typo.h5">Dodaj novi element</MudText>
+    <MudStack Row="true" Spacing="2">
+        <MudTextField @bind-Value="_key" Label="Key" Variant="Variant.Outlined" Style="width: 240px;" />
+        <MudTextField @bind-Value="_value" Label="Value" Variant="Variant.Outlined" Style="width: 240px;" />
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AddEntry">Add</MudButton>
+        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="ClearAll">Clear All</MudButton>
+    </MudStack>
+
+    <MudDivider Class="my-4" />
+
+    <MudText Typo="Typo.h5">Sadržaj rečnika</MudText>
+
+    <MudDataGrid T="KeyValuePair<string,string>" Items="@_entries" Hover="true" Dense="true" Striped="true">
+        <Columns>
+            <PropertyColumn Property="@(x => x.Key)" Title="Key" />
+            <PropertyColumn Property="@(x => x.Value)" Title="Value" />
+            <TemplateColumn Title="Akcije">
+                <CellTemplate Context="context">
+                    <MudButton Color="Color.Error" Variant="Variant.Outlined"
+                               OnClick="@(() => RemoveEntry(context.Item.Key))">
+                        Remove
+                    </MudButton>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+</MudStack>
+
+@code {
+    private string _key = string.Empty;
+    private string _value = string.Empty;
+    private List<KeyValuePair<string, string>> _entries = new();
+
+    protected override void OnInitialized()
+    {
+        RefreshEntries();
+    }
+
+    private void AddEntry()
+    {
+        if (!string.IsNullOrWhiteSpace(_key) && !string.IsNullOrWhiteSpace(_value))
+        {
+            Dict.dodaj(_key, _value);
+            _key = string.Empty;
+            _value = string.Empty;
+            RefreshEntries();
+        }
+    }
+
+    private void RemoveEntry(string key)
+    {
+        Dict.obrisiElement(key);
+        RefreshEntries();
+    }
+
+    private void ClearAll()
+    {
+        Dict.obrisi();
+        RefreshEntries();
+    }
+
+    private void RefreshEntries()
+    {
+        _entries = Dict.ToList();
+        StateHasChanged();
+    }
+}
