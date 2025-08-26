@@ -1,3 +1,3 @@
 # MyDictionaryBlazor
 
-## In folder Data is class MySimpleDictionary
+In folder **Data** is class **MySimpleDictionary**.
